@@ -4,7 +4,7 @@
     {{#unless photo}}
       <div class="dropbox no-image center-align valign-wrapper z-depth-1">
         <div class="photo-in valign">
-          <div>Drop Photo Here</div>
+          <div>{{newDirections}}</div>
           <div>
             <i class="mdi-image-photo"></i>
           </div>  
@@ -12,21 +12,27 @@
       </div>
     {{else}}
       <div class="card-div center-align">
-        <div class="card dropbox" style="width:{{photo.img.width}}px;">
-          <div class="card-image">
-            <img src="{{photo.src}}" style="height:{{photo.img.height}}px; width:{{photo.img.width}}px;">
+        <div class="card {{noContent}} dropbox" style="width:{{photo.img.width}}px; ">
+          <div class="card-image" style="width:{{photo.img.width}}px; height:{{photo.img.height}}px;">
+            <img src="{{photo.src}}">
             <span class="card-title">{{photo.name}}</span>
+            <span class="card-tagline">{{replaceDirections}}</span>
           </div>
-          <div class="card-content left-align">
-            <p>
-              Original File Size: {{photo.filesize}} 
-              <br/>
-              Image Size: {{photo.size}} 
-            </p>
-          </div>
-          <div class="card-action right-align">
-            <a class="reset" href="">clear</a>
-          </div>
+          {{#if showInfo}}
+            <div class="card-content left-align">
+              <p>
+                Original File Size: {{photo.filesize}} 
+                <br/>
+                Image Size: {{photo.size}} 
+                <br/>
+              </p>
+            </div>
+          {{/if}}
+          {{#if showClear}}
+            <div class="card-action right-align">
+              <a class="reset" href="">clear</a>
+            </div>
+          {{/if}}
         </div>
       </div>
     {{/unless}}

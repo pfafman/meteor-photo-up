@@ -48,6 +48,15 @@ Template.photoUp.helpers
   photo: ->
     Template.instance().photo.get()
 
+  newDirections: ->
+    @newDirections or "Drop image here"
+
+  replaceDirections: ->
+    @replaceDirections or "Drop new image to replace"
+
+  noContent: ->
+    if not @showInfo and not @showClear
+      "no-content"
 
 Template.photoUp.events
   

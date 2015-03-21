@@ -20,5 +20,27 @@
   .card {
     color: #333;
     margin: auto;
+    .card-image {
+      .card-title {
+        padding: 0.5em;
+        bottom: 0em;
+      }
+      .card-tagline {
+        width: 100%;
+        background-color: rgba(250,250,250,0.5);
+        font-style: italic;
+        font-size: 0.9em;
+        position: absolute;
+        top: 0em;
+        right: 0em;
+        color: #222;
+      }
+    }
+    .card-content {
+      //background-color: #fff;
+    }
+  }
+  .card.no-content {
+    background-color: rgba(0,0,0,0);
   }
 }
