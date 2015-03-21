@@ -1,0 +1,34 @@
+
+<template name="photoUp">
+  <div class="photo-up">
+    {{#unless photo}}
+      <div class="dropbox center-align valign-wrapper z-depth-2">
+        <div class="photo-in valign">
+          <div>Drop Photo Here</div>
+          <div>
+            <i class="mdi-image-photo"></i>
+          </div>  
+        </div>
+      </div>
+    {{else}}
+      <div class="card-div center-align">
+        <div class="card" style="width:{{photo.img.width}}px;">
+          <div class="card-image">
+            <img src="{{photo.src}}" style="height:{{photo.img.height}}px; width:{{photo.img.width}}px;">
+            <span class="card-title">{{photo.name}}</span>
+          </div>
+          <div class="card-content left-align">
+            <p>
+              Original File Size: {{photo.filesize}} 
+              <br/>
+              Image Size: {{photo.size}} 
+            </p>
+          </div>
+          <div class="card-action right-align">
+            <a class="reset" href="">clear</a>
+          </div>
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
