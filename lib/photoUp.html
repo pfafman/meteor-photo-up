@@ -2,7 +2,7 @@
 <template name="photoUp">
   <div class="photo-up">
     {{#unless photo}}
-      <div class="dropbox center-align valign-wrapper z-depth-2">
+      <div class="dropbox no-image center-align valign-wrapper z-depth-1">
         <div class="photo-in valign">
           <div>Drop Photo Here</div>
           <div>
@@ -12,7 +12,7 @@
       </div>
     {{else}}
       <div class="card-div center-align">
-        <div class="card" style="width:{{photo.img.width}}px;">
+        <div class="card dropbox" style="width:{{photo.img.width}}px;">
           <div class="card-image">
             <img src="{{photo.src}}" style="height:{{photo.img.height}}px; width:{{photo.img.width}}px;">
             <span class="card-title">{{photo.name}}</span>

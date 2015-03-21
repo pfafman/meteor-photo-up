@@ -24,13 +24,16 @@ then in the templates javascript/coffeescript file
 ```coffeescript
 Template.myTemplate.helpers
     photoUpOptions: ->
-        # options ...
+        rtn =
+            loadImage:
+                # ...
 ```
 
 ### Options
 
-* maxHeight - the image will be resized not to exceed this height
-* maxWidth - the image will be resized not to exceed this width
+Can pass in the options for [loadImage](https://github.com/blueimp/JavaScript-Load-Image#options)
+* loadImage - { ... load image options ... }
+
 
 
 ## UI
