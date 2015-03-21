@@ -24,15 +24,28 @@ then in the templates javascript/coffeescript file
 ```coffeescript
 Template.myTemplate.helpers
     photoUpOptions: ->
-        rtn =
-            loadImage:
-                # ...
+        loadImage:
+           # ...
+        callback: (error, photo) ->
+           # Do what you want with the photo.  Save it?
 ```
 
 ### Options
 
-Can pass in the options for [loadImage](https://github.com/blueimp/JavaScript-Load-Image#options)
+Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-Load-Image#options)
 * loadImage - { ... load image options ... }
+* callback - function that gets the photo object as a parameter. Where the photo object is
+
+```
+	photo:
+	  name: file.name         # (without the type suffix)
+      filesize: file.size
+      img: img                # the img returned from load-image
+      src: img.toDataURL()
+      size: img.toDataURL().length
+      newImage: true
+      orientation: (from exif or 1)
+```
 
 
 

@@ -1,20 +1,6 @@
 
 DEBUG = true
 
-###
-
-  doJcrop: ->
-    self = @
-    $('#photoUploadPreview').Jcrop
-      onSelect: (cords) =>
-        @_cropCords.set(cords)
-      onRelease: =>
-        @_cropCords.set(null)
-    , ->
-      self.jcrop = @
-    .parent().on "click", (event) ->
-      event.preventDefault()
-###
 
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
@@ -23,7 +9,8 @@ iOS: ->
 Template.photoUp.onCreated ->
   @photo = new ReactiveVar()
   @processing = new ReactiveVar(null)
-
+  @cropCords = new ReactiveVar(null)
+  #@crop = new ReactiveVar(null)
 
 Template.photoUp.onRendered ->
   console.log("turn off drag over") if DEBUG
@@ -116,14 +103,25 @@ Template.photoUp.events
               
               tmpl.photo.set(photo)
 
-              if tmpl.allowCropping
-                console.log("TODO: Jcrop") if DEBUG
-                #doJcrop()
+              if options.crop
+                console.log("Jcrop") if DEBUG
+                tmpl.$('#image-preview').Jcrop
+                  onSelect: (cords) ->
+                    tmpl.cropCords.set(cords)
+                  onRelease: ->
+                    tmpl.cropCords.set(null)
+                , ->
+                  console.log("Set crop", @) if DEBUG
+                  #tmpl.crop.set(@)
+                  tmpl.photo.set(@)
+                  options.callback?(null, @)
+                .parent().on "click", (event) ->
+                  event.preventDefault()
 
-              options.callback?(photo)
+              else
 
-              #$('#photo-preview-dialog').modal
-              #  show: true
+                options.callback?(null, photo)
+
             , loadImage.options
 
         else
