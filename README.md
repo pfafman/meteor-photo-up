@@ -32,9 +32,19 @@ Template.myTemplate.helpers
 
 ### Options
 
-Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-Load-Image#options)
-* loadImage - { ... load image options ... }
-* callback - function that gets the photo object as a parameter. Where the photo object is
+Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-Load-Image#options) and [Jcrop](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options)
+
+* loadImage - { ... load image options [see site](https://github.com/blueimp/JavaScript-Load-Image#options) ... }
+
+* jCrop - { ... Jcrop options [see site](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options) ... }
+
+* showInfo - bool show image information
+
+* minDisplayWidth: minimum width for the display window
+    
+* minDisplayHeight: minimum height for the display window
+
+* callback - function that gets the photo object as a parameter when ever it changes.
 
 ```
 	photo:
@@ -47,6 +57,7 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
       orientation: (from exif or 1)
 ```
 
+This is also available in the *global* reactive-var `PhotoUp`.  This will have the last image set and will cause problems if you have multiple instances.  *Note: Trying to come up with a different approach.*
 
 
 ## UI
@@ -54,14 +65,14 @@ You can change the UI by overwriting the CSS.
 
 ```
 .photo-up  {
-  // See source for all the css vars
+  // See source CSS for the source variables.
 }
 ```
 
 
 ## TODO
 
-* cropping
+* Better approach for a reactive var that returns the photo.
 
 
 ## License

@@ -1,0 +1,40 @@
+
+.photo-up {
+  margin: auto;
+}
+.photo-up .dropbox.no-image {
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  background-color: #fff;
+  color: #333;
+  font-size: 1.3em;
+  font-weight: 500;
+}
+.photo-up .dropbox.no-image .photo-in {
+  margin: auto;
+}
+.photo-up .dropbox.no-image .photo-in i {
+  font-size: 3em;
+}
+.photo-up .card {
+  color: #333;
+  margin: auto;
+}
+.photo-up .card .card-image .card-title {
+  padding: 0.5em;
+  bottom: 0em;
+}
+.photo-up .card .card-image .card-tagline {
+  width: 100%;
+  background-color: rgba(250,250,250,0.5);
+  font-style: italic;
+  font-size: 0.9em;
+  position: absolute;
+  top: 0em;
+  right: 0em;
+  color: #222;
+}
+.photo-up .card.no-content {
+  background-color: rgba(0,0,0,0);
+}

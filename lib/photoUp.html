@@ -11,30 +11,43 @@
         </div>
       </div>
     {{else}}
-      <div class="card-div center-align">
-        <div class="card {{noContent}} dropbox" style="width:{{photo.img.width}}px; ">
-          <div class="card-image" style="width:{{photo.img.width}}px; height:{{photo.img.height}}px;">
-            <img id="image-preview" src="{{photo.src}}">
-            <span class="card-title">{{photo.name}}</span>
-            <span class="card-tagline">{{replaceDirections}}</span>
-          </div>
-          {{#if showInfo}}
-            <div class="card-content left-align">
-              <p>
-                Original File Size: {{photo.filesize}} 
-                <br/>
-                Image Size: {{photo.size}} 
-                <br/>
-              </p>
-            </div>
+      {{> photoUpImagePreview}}
+    {{/unless}}
+  </div>
+</template>
+
+
+<template name="photoUpImagePreview">
+  <div class="card-div center-align">
+    <div class="card {{noContent}} dropbox" style="width:{{imgWidth}}px; ">
+      <div class="card-image" style="width:{{imgWidth}}px;">
+        <img id="image-preview" src="{{photo.src}}">
+        <span class="card-title">{{photo.name}}</span>
+        <span class="card-tagline">{{replaceDirections}}</span>
+      </div>
+      {{#if showInfo}}
+        <div class="card-content left-align">
+          <p>
+            Original File Size: {{photo.filesize}} 
+            <br/>
+            Image Size: {{photo.size}} 
+            <br/>
+          </p>
+        </div>
+      {{/if}}
+      {{#if showAction}}
+        <div class="card-action right-align">
+          {{#if showCrop}}
+            <a class="crop" href="">crop</a>
+          {{/if}}
+          {{#if showReset}}
+            <a class="reset" href="">reset</a>
           {{/if}}
           {{#if showClear}}
-            <div class="card-action right-align">
-              <a class="reset" href="">clear</a>
-            </div>
+            <a class="clear" href="">clear</a>
           {{/if}}
         </div>
-      </div>
-    {{/unless}}
+      {{/if}}
+    </div>
   </div>
 </template>

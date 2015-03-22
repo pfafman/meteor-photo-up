@@ -9,7 +9,7 @@ Package.on_use(function(api, where) {
   api.versionsFrom("METEOR@1.0.4");
 
   api.use([
-    'less',
+    //'less',
     'underscore',
     'templating',
     'ui',
@@ -37,7 +37,8 @@ Package.on_use(function(api, where) {
 
 
   api.add_files([
-    'lib/photoUp.less',
+    //'lib/photoUp.less',
+    'lib/photoUp.css',
     'lib/photoUp.html',
     'lib/photoUp.coffee'
   ], 'client');
