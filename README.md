@@ -5,6 +5,9 @@ Meteor package to upload, resize and crop and image.
 
 *Warning: Only works with Meteor 1.0.4+*
 
+Currently uses [Materialize](http://materializecss.com) for the UI.  You are responsible for  installing Materialize.  
+Will remove in the future or make other frameworks an option.
+
 ## Install
 
 ```bash
@@ -37,6 +40,8 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
 * loadImage - { ... load image options [see site](https://github.com/blueimp/JavaScript-Load-Image#options) ... }
 
 * jCrop - { ... Jcrop options [see site](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options) ... }
+
+* framework - Choose framework.  Only option currently is 'materialize' the default
 
 * showInfo - bool show image information
 
@@ -73,7 +78,7 @@ You can change the UI by overwriting the CSS.
 ## TODO
 
 * Better approach for a reactive var that returns the photo.
-
+* Make UI framework agnostic or implement other frameworks (bootstrap ...)
 
 ## License
 MIT
