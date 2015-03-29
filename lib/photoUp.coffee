@@ -1,6 +1,5 @@
 
-DEBUG = true
-
+DEBUG = false
 
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
