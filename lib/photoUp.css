@@ -1,11 +1,13 @@
 
 .photo-up {
   margin: auto;
+  max-width: 100%;
 }
 .photo-up .dropbox.no-image {
   width: 200px;
   height: 200px;
   margin: auto;
+  padding: 0.75em;
   background-color: #fff;
   color: #333;
   font-size: 1.3em;
@@ -13,14 +15,31 @@
 }
 .photo-up .dropbox.no-image .photo-in {
   margin: auto;
+  cursor: pointer;
 }
 .photo-up .dropbox.no-image .photo-in i {
   font-size: 3em;
 }
 .photo-up .card {
+  position: relative;
   color: #333;
   margin: auto;
 }
+
+.photo-up .card-div {
+  margin: auto;
+}
+
+.photo-up .card.fix-width {
+  max-width: 100%;
+}
+.photo-up .card.fix-width .card-image {
+  max-width: 100%;
+}
+.photo-up .card.fix-width .card-image img {
+  max-width: 100%;
+}
+
 .photo-up .card .card-image .card-title {
   padding: 0.5em;
   bottom: 0em;

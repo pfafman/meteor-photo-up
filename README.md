@@ -45,6 +45,8 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
 
 * showInfo - bool show image information
 
+* showClear - Show button to clear the image. 
+
 * minDisplayWidth: minimum width for the display window
     
 * minDisplayHeight: minimum height for the display window

@@ -10,6 +10,31 @@ iOS: ->
 #  a?.src is b?.src
 
 
+processImage = (fileOrSrc, tmpl, options, onSuccess) ->
+  console.log("processImage", fileOrSrc?.length)
+  loadImage.options = _.defaults options.loadImage or {},
+    canvas: true
+    orientation: fileOrSrc?.exif?.get?('Orientation') or 1
+
+  loadImage fileOrSrc, (img) ->
+    console.log("processImage loadImage", img, img.src?.length)
+    photo =
+      name: fileOrSrc?.name?.split('.')[0] or ''
+      filesize: fileOrSrc?.size or img.toDataURL?().length or img.src?.length
+      img: img
+      width: img.width
+      height: img.height
+      src: img.toDataURL?() or img.src
+      size: img.toDataURL?().length or img.src?.length
+      newImage: true
+      orientation: data?.exif?.get?('Orientation') or 1
+    
+    PhotoUp.set(photo)
+
+    options.callback?(null, photo)
+    onSuccess?()
+
+
 dropFile = (e, tmpl, options, onSuccess) ->
   e.preventDefault()
   evt = e.originalEvent or e
@@ -30,6 +55,8 @@ dropFile = (e, tmpl, options, onSuccess) ->
               name: file.name.split('.')[0]
               filesize: file.size
               img: img
+              width: img.width
+              height: img.height
               src: img.toDataURL()
               size: img.toDataURL().length
               newImage: true
@@ -50,7 +77,10 @@ dropFile = (e, tmpl, options, onSuccess) ->
 
 
 Template.photoUp.onCreated ->
-  PhotoUp.set(null)
+  if @data?.photo?
+    @data.photo.img = new Image(@data.photo.width, @data.photo.height)
+    @data.photo.img.src = @data.photo.src
+  PhotoUp.set(@data?.photo)
 
 
 Template.photoUp.onRendered ->
@@ -112,6 +142,61 @@ Template.photoUp.events
       dropFile(e, tmpl, @)
 
 
+  # Trigger file dialog.  Need way to do this again if we selected an image already
+  'click .photo-in': (e, tmpl) ->
+    console.log('click photo-in') if DEBUG
+    e.preventDefault()
+    if Meteor.isCordova
+      if MaterializeModal?.confirm?
+        MaterializeModal.confirm
+          title: "Use Camera?"
+          message: ''
+          closeLabel: 'No'
+          submitLabel: 'Yes'
+          callback: (useCamera) =>
+            
+            options =
+              width: @desiredWidth or 600
+              height: @desiredHeight or 400
+              quality: 100
+            
+            if not useCamera
+              options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
+            
+            MeteorCamera.getPicture options, (error, src) =>
+              if error
+                toast("#{error.reason}", 4000)
+              else if src
+                processImage(src, tmpl, @)
+      else
+        # THIS IS UGLY ...
+        useCamera = confirm("Use camera?")
+        options =
+          width: @desiredWidth or 600
+          height: @desiredHeight or 400
+          quality: 100
+        
+        if not useCamera
+          options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
+        
+        MeteorCamera.getPicture options, (error, src) =>
+          if error
+            toast("#{error.reason}", 4000)
+          else if src
+            processImage(src, tmpl, @)
+
+
+    else
+      tmpl.$("#file-uploader").trigger('click')
+
+
+  'change #file-uploader': (e, tmpl) ->
+    e.preventDefault()
+    if not PhotoUp.get()?
+      console.log("FILE LOAD on photoUp") if DEBUG
+      dropFile(e, tmpl, @)
+
+
 ###########################
 #
 #  photoUpImagePreview
@@ -123,9 +208,12 @@ doJcrop = (tmpl) ->
   console.log("doJcrop", tmpl.data.jCrop) if DEBUG
   options = _.defaults tmpl.data.jCrop or {},
     onSelect: (cords) ->
+      console.log("jcrop on select", cords) if DEBUG
       tmpl.cropCords.set(cords)
     onRelease: ->
       tmpl.cropCords.set(null)
+    #onChange: (cords) ->
+    #  console.log("jcrop on change", cords)
 
   tmpl.$('#image-preview').Jcrop options, ->
     console.log("Set crop", @, tmpl) if DEBUG
@@ -142,6 +230,7 @@ removeJcrop = (tmpl) ->
 
 
 Template.photoUpImagePreview.onCreated ->
+  console.log("photoUpImagePreview onCreated") if DEBUG
   @originalPhoto = new ReactiveVar()
   @cropCords = new ReactiveVar(null)
 
@@ -155,8 +244,14 @@ Template.photoUpImagePreview.onRendered ->
 Template.photoUpImagePreview.helpers
   
   replaceDirections: ->
-    @replaceDirections or "Drop new image to replace"
+    replaceDirections = "Drop new image to replace"
+    if @crop
+      replaceDirections += " or crop this image"
+    @replaceDirections or replaceDirections
 
+  fixMaxWidth: ->
+    if Meteor.isCordova
+      "fix-width"
 
   noContent: ->
     if @showInfo or @showClear or Template.instance().cropCords?.get()? or Template.instance().originalPhoto?.get()?
@@ -174,6 +269,7 @@ Template.photoUpImagePreview.helpers
 
 
   showCrop: ->
+    console.log("showCrop", @crop, Template.instance().cropCords?.get()) if DEBUG
     @crop and Template.instance().cropCords?.get()?
 
 
@@ -183,9 +279,12 @@ Template.photoUpImagePreview.helpers
 
 
   imgWidth: ->
-    console.log("imgWidth", PhotoUp.get()?.img?.width, @minDisplayWidth) if DEBUG
-    Math.max(PhotoUp.get().img.width, @minDisplayWidth or 200)
-
+    console.log("imgWidth", PhotoUp.get()?.width, @minDisplayWidth) if DEBUG
+    width = Math.max(PhotoUp.get().width, @minDisplayWidth or 200)
+    if @maxDisplayWidth? and width > @maxDisplayWidth
+      @maxDisplayWidth
+    else
+      width
 
   # imgHeight: ->
   #   console.log("imgHeight", PhotoUp.get()?.img?.height, @minDisplayHeight, Template.instance()) if DEBUG
@@ -222,14 +321,17 @@ Template.photoUpImagePreview.events
 
 
   'click .crop': (e, tmpl) ->
+    e.preventDefault()
+    event.stopPropagation()
     if PhotoUp.get()? and Template.instance().cropCords?.get()?
       cropCords = Template.instance().cropCords.get()
-      photo =  loadImage.scale PhotoUp.get()
+      #photo =  loadImage.scale PhotoUp.get()
+      photo = PhotoUp.get()
       if photo.newImage
         console.log("save original") if DEBUG
         tmpl.originalPhoto.set(photo)
-      console.log("Crop Image", cropCords, photo) if DEBUG
       
+      console.log("Crop Image", cropCords, PhotoUp.get()) if DEBUG
       newImg = loadImage.scale photo.img,
         left: cropCords.x
         top: cropCords.y
@@ -248,6 +350,6 @@ Template.photoUpImagePreview.events
       removeJcrop(tmpl)
       Template.instance().cropCords.set(null)
       PhotoUp.set(newPhoto)
-      @callback?(null, photo)
+      @callback?(null, newPhoto)
 
 

@@ -1,8 +1,9 @@
 
 <template name="photoUp">
   <div class="photo-up">
+    <input type="file" id="file-uploader" accept="image/*" style="display:none" />
     {{#unless photo}}
-      <div class="dropbox no-image center-align valign-wrapper z-depth-1">
+      <div class="dropbox no-image center-align valign-wrapper z-depth-1 {{photoClass}}">
         <div class="photo-in valign">
           <div>{{newDirections}}</div>
           <div>
@@ -18,8 +19,8 @@
 
 
 <template name="photoUpImagePreview">
-  <div class="card-div center-align">
-    <div class="card {{noContent}} dropbox" style="width:{{imgWidth}}px; ">
+  <div class="card-div center-align {{photoClass}}" style="width:{{imgWidth}}px;">
+    <div class="card {{noContent}} {{fixMaxWidth}} dropbox" style="width:{{imgWidth}}px;">
       <div class="card-image" style="width:{{imgWidth}}px;">
         <img id="image-preview" src="{{photo.src}}">
         <span class="card-title">{{photo.name}}</span>
