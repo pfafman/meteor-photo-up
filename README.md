@@ -1,7 +1,7 @@
 Photo Up
 ====================
 
-Meteor package to upload, resize and crop and image.
+Meteor package to upload (*into the Meteor client*), resize and crop an image.
 
 *Warning: Only works with Meteor 1.0.4+*
 
@@ -64,8 +64,6 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
       orientation: (from exif or 1)
 ```
 
-This is also available in the *global* reactive-var `PhotoUp`.  This will have the last image set and will cause problems if you have multiple instances.  *Note: Trying to come up with a different approach.*
-
 
 ## UI
 You can change the UI by overwriting the CSS.
@@ -79,7 +77,6 @@ You can change the UI by overwriting the CSS.
 
 ## TODO
 
-* Better approach for a reactive var that returns the photo.
 * Make UI framework agnostic or implement other frameworks (bootstrap ...)
 
 ## License
