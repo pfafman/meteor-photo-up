@@ -1,7 +1,7 @@
 Package.describe({
   name: "pfafman:photo-up",
-  summary: "Upload a photo with resize and preview",
-  version: "0.1.3_1",
+  summary: "Upload a photo to the client with resize, crop and preview",
+  version: "0.2.0",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
@@ -16,7 +16,6 @@ Package.on_use(function(api, where) {
     'jquery',
     'coffeescript',
     'reactive-var',
-    //'pfafman:materialize-modal' // Should proba
   ], 'client');
 
   // Jcrop
