@@ -28,7 +28,10 @@ then in the templates javascript/coffeescript file
 Template.myTemplate.helpers
     photoUpOptions: ->
         loadImage:
-           # ...
+           # ... see loadImage site
+        crop: true # If true do jCrop with setting below
+        jCrop:
+        	# ... see jcrop site
         callback: (error, photo) ->
            # Do what you want with the photo.  Save it?
 ```
@@ -38,6 +41,9 @@ Template.myTemplate.helpers
 Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-Load-Image#options) and [Jcrop](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options)
 
 * loadImage - { ... load image options [see site](https://github.com/blueimp/JavaScript-Load-Image#options) ... }
+
+
+* crop - bool if true then do jCrop after upload.
 
 * jCrop - { ... Jcrop options [see site](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options) ... }
 
@@ -78,6 +84,7 @@ You can change the UI by overwriting the CSS.
 ## TODO
 
 * Make UI framework agnostic or implement other frameworks (bootstrap ...)
+* Mess with jCrop for if you start messing with sizing the cropping can get all messed up.
 
 ## License
 MIT
