@@ -69,7 +69,7 @@ dropFile = (e, tmpl, options, onSuccess) ->
           , loadImage.options
 
       else
-        toast("Cannot read #{file.type} file #{file.name}", 3000, 'red')
+        Materialize.toast("Cannot read #{file.type} file #{file.name}", 3000, 'red')
 
   false
 
@@ -164,11 +164,11 @@ Template.photoUp.events
             
             MeteorCamera.getPicture options, (error, src) =>
               if error
-                toast("#{error.reason}", 4000)
+                Materialize.toast("#{error.reason}", 4000)
               else if src
                 processImage(src, tmpl, @)
       else
-        # THIS IS UGLY ...
+        # Confirm is an ugly UI!
         useCamera = confirm("Use camera?")
         options =
           width: @desiredWidth or 600
@@ -180,7 +180,7 @@ Template.photoUp.events
         
         MeteorCamera.getPicture options, (error, src) =>
           if error
-            toast("#{error.reason}", 4000)
+            Materialize.toast("#{error.reason}", 4000)
           else if src
             processImage(src, tmpl, @)
 
