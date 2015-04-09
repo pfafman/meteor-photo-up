@@ -29,10 +29,19 @@
       {{#if showInfo}}
         <div class="card-content left-align">
           <p>
-            Original File Size: {{photo.filesize}} 
-            <br/>
-            Image Size: {{photo.size}} 
-            <br/>
+            <div>
+              Original File Size: {{filesize}} KB
+            </div>
+            <div>
+              Image Size: {{photosize}} KB
+            </div>
+            <div class={{badAspectRatio}}>
+              Dimensions: {{photo.height}}h x {{photo.width}}w
+              {{#if badAspectRatio}}
+                <br/>
+                Photo is not the required aspect ration {{requiredAspectRatio}}
+              {{/if}}
+            </div>
           </p>
         </div>
       {{/if}}

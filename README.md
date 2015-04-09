@@ -57,6 +57,8 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
     
 * minDisplayHeight: minimum height for the display window
 
+* requiredAspectRatio: number, if set will require the given aspect ratio and only return the image if it is valid.
+
 * callback - function that gets the photo object as a parameter when ever it changes.
 
 ```

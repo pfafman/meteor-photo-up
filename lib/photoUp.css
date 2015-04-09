@@ -57,3 +57,8 @@
 .photo-up .card.no-content {
   background-color: rgba(0,0,0,0);
 }
+
+.photo-up .bad-aspect-ratio {
+  color: red;
+  font-style: italic;
+}

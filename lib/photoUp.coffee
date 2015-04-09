@@ -1,12 +1,26 @@
 
-DEBUG = false
+DEBUG = true
 
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
 
 # Global  arrrggg
-@PhotoUp = new ReactiveVar null #, (a, b) ->
-#  a?.src is b?.src
+@PhotoUp = new ReactiveVar null
+
+
+
+aspectOk = ->
+  options = PhotoUp.get().options
+  if options.requiredAspectRatio
+    aspectRatio = PhotoUp.get().width/PhotoUp.get().height
+    diff = options.requiredAspectRatio - aspectRatio
+    if diff > 0.01
+      return false
+  true
+
+
+imageIsValid = ->
+  aspectOk()
 
 
 processImage = (fileOrSrc, tmpl, options, onSuccess) ->
@@ -27,10 +41,13 @@ processImage = (fileOrSrc, tmpl, options, onSuccess) ->
       size: img.toDataURL?().length or img.src?.length
       newImage: true
       orientation: data?.exif?.get?('Orientation') or 1
+      options: options
     
     PhotoUp.set(photo)
 
-    options.callback?(null, photo)
+    if imageIsValid()
+      options.callback?(null, photo)
+    
     onSuccess?()
 
 
@@ -60,10 +77,12 @@ dropFile = (e, tmpl, options, onSuccess) ->
               size: img.toDataURL().length
               newImage: true
               orientation: data?.exif?.get?('Orientation') or 1
+              options: options
             
             PhotoUp.set(photo)
 
-            options.callback?(null, photo)
+            if imageIsValid()
+              options.callback?(null, photo)
             onSuccess?()
 
           , loadImage.options
@@ -248,9 +267,11 @@ Template.photoUpImagePreview.helpers
       replaceDirections += " or crop this image"
     @replaceDirections or replaceDirections
 
+
   fixMaxWidth: ->
     if Meteor.isCordova
       "fix-width"
+
 
   noContent: ->
     if @showInfo or @showClear or Template.instance().cropCords?.get()? or Template.instance().originalPhoto?.get()?
@@ -258,6 +279,18 @@ Template.photoUpImagePreview.helpers
     else
       "no-content"
 
+  filesize: ->
+    (PhotoUp.get().filesize/1000).toFixed(0)
+
+
+  photosize: ->
+    (PhotoUp.get().size/1000).toFixed(0)
+
+
+  badAspectRatio: ->
+    if not aspectOk(@)
+      "bad-aspect-ratio"
+    
 
   showAction: ->
     Template.instance().cropCords?.get()? or @showClear or Template.instance().originalPhoto?.get()?
@@ -342,13 +375,16 @@ Template.photoUpImagePreview.events
       console.log("New Crop Image", newImg) if DEBUG
       newPhoto = _.extend {}, photo,
         img: newImg
+        width: newImg.width
+        height: newImg.height
         src: newImg.toDataURL()
-        size: photo.src.length
+        size: newImg.toDataURL().length
         newImage: false
         
       removeJcrop(tmpl)
       Template.instance().cropCords.set(null)
       PhotoUp.set(newPhoto)
-      @callback?(null, newPhoto)
+      if imageIsValid()
+        @callback?(null, newPhoto)
 
 
