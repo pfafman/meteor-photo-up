@@ -1,5 +1,5 @@
 
-DEBUG = true
+DEBUG = false
 
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
@@ -223,12 +223,14 @@ Template.photoUp.events
 
 doJcrop = (tmpl) ->
   tmpl.jCrop = null
-  console.log("doJcrop", tmpl.data.jCrop) if DEBUG
+  console.log("doJcrop", tmpl, tmpl.data.jCrop) if DEBUG
   options = _.defaults tmpl.data.jCrop or {},
     onSelect: (cords) ->
-      console.log("jcrop on select", cords) if DEBUG
+      console.log("jcrop on select", cords, tmpl.cropCords) if DEBUG
+      tmpl.cropCords.set(null)
       tmpl.cropCords.set(cords)
     onRelease: ->
+      console.log("jcrop on release") if DEBUG
       tmpl.cropCords.set(null)
     #onChange: (cords) ->
     #  console.log("jcrop on change", cords)
@@ -293,7 +295,8 @@ Template.photoUpImagePreview.helpers
     
 
   showAction: ->
-    Template.instance().cropCords?.get()? or @showClear or Template.instance().originalPhoto?.get()?
+    console.log("showAction", Template.instance().cropCords.get()) if DEBUG
+    Template.instance().cropCords.get()? or @showClear or Template.instance().originalPhoto?.get()?
 
 
   showReset: ->
@@ -301,8 +304,8 @@ Template.photoUpImagePreview.helpers
 
 
   showCrop: ->
-    console.log("showCrop", @crop, Template.instance().cropCords?.get()) if DEBUG
-    @crop and Template.instance().cropCords?.get()?
+    console.log("showCrop", @crop, Template.instance().cropCords.get()) if DEBUG
+    @crop and Template.instance().cropCords.get()?
 
 
   photo: ->
