@@ -15,4 +15,4 @@ sk =
   "Drop new image to replace or crop this image": "Drop nový obraz nahradiť alebo orezať tento obrázok"
   "Photo is not the required aspect ration": "Fotografie nie je požadovaný pomer strán"
 
-  T9n.map "sk", sk
+T9n.map "sk", sk
