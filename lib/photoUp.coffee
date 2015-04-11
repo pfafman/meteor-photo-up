@@ -88,7 +88,7 @@ dropFile = (e, tmpl, options, onSuccess) ->
           , loadImage.options
 
       else
-        Materialize.toast("Cannot read #{file.type} file #{file.name}", 3000, 'red')
+        Materialize.toast(T9n.get("Cannot read") + " #{file.type} " + T9n.get('file') + " #{file.name}", 3000, 'red')
 
   false
 
@@ -127,7 +127,7 @@ Template.photoUp.helpers
 
 
   newDirections: ->
-    @newDirections or "Drop image here"
+    @newDirections or T9n.get("Drop image here")
 
 
 Template.photoUp.events
@@ -167,10 +167,10 @@ Template.photoUp.events
     if Meteor.isCordova
       if MaterializeModal?.confirm?
         MaterializeModal.confirm
-          title: "Use Camera?"
+          title: T9n.get "Use Camera?"
           message: ''
-          closeLabel: 'No'
-          submitLabel: 'Yes'
+          closeLabel: T9n.get 'No'
+          submitLabel: T9n.get 'Yes'
           callback: (useCamera) =>
             
             options =
@@ -188,7 +188,7 @@ Template.photoUp.events
                 processImage(src, tmpl, @)
       else
         # Confirm is an ugly UI!
-        useCamera = confirm("Use camera?")
+        useCamera = confirm(T9n.get "Use camera?")
         options =
           width: @desiredWidth or 600
           height: @desiredHeight or 400
@@ -267,6 +267,7 @@ Template.photoUpImagePreview.helpers
     replaceDirections = "Drop new image to replace"
     if @crop
       replaceDirections += " or crop this image"
+    T9n.get replaceDirections
     @replaceDirections or replaceDirections
 
 

@@ -30,16 +30,16 @@
         <div class="card-content left-align">
           <p>
             <div>
-              Original File Size: {{filesize}} KB
+              {{t9n 'Original File Size'}}: {{filesize}} KB
             </div>
             <div>
-              Image Size: {{photosize}} KB
+              {{t9n 'Image Size'}}: {{photosize}} KB
             </div>
             <div class={{badAspectRatio}}>
-              Dimensions: {{photo.height}}h x {{photo.width}}w
+              {{t9n 'Dimensions'}}: {{photo.height}}h x {{photo.width}}w
               {{#if badAspectRatio}}
                 <br/>
-                Photo is not the required aspect ration {{requiredAspectRatio}}
+                {{t9n 'Photo is not the required aspect ration'}} {{requiredAspectRatio}}
               {{/if}}
             </div>
           </p>
@@ -48,13 +48,13 @@
       {{#if showAction}}
         <div class="card-action right-align">
           {{#if showCrop}}
-            <a class="crop" href="">crop</a>
+            <a class="crop" href="">{{t9n 'crop'}}</a>
           {{/if}}
           {{#if showReset}}
-            <a class="reset" href="">reset</a>
+            <a class="reset" href="">{{t9n 'reset'}}</a>
           {{/if}}
           {{#if showClear}}
-            <a class="clear" href="">clear</a>
+            <a class="clear" href="">{{t9n 'clear'}}</a>
           {{/if}}
         </div>
       {{/if}}
