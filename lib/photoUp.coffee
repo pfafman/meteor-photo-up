@@ -1,6 +1,8 @@
 
 DEBUG = false
 
+CORDOVA_PROMPT = true
+
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
 
@@ -164,7 +166,7 @@ Template.photoUp.events
   'click .photo-in': (e, tmpl) ->
     console.log('click photo-in') if DEBUG
     e.preventDefault()
-    if Meteor.isCordova
+    if Meteor.isCordova and CORDOVA_PROMPT
       if MaterializeModal?.confirm?
         MaterializeModal.confirm
           title: T9n.get "Use Camera?"
@@ -224,7 +226,16 @@ Template.photoUp.events
 doJcrop = (tmpl) ->
   tmpl.jCrop = null
   console.log("doJcrop", tmpl, tmpl.data.jCrop) if DEBUG
+
+  img = tmpl.$('#image-preview')[0]
+  if tmpl.data.jCrop?.aspectRatio
+    initialHeight = (img.width-60)/tmpl.data.jCrop.aspectRatio - 30
+  else
+    initialHeight = img.height-30
+  setSelect = [30, 30, img.width-30, initialHeight]
+        
   options = _.defaults tmpl.data.jCrop or {},
+    setSelect: setSelect
     onSelect: (cords) ->
       console.log("jcrop on select", cords, tmpl.cropCords) if DEBUG
       tmpl.cropCords.set(null)
