@@ -369,7 +369,7 @@ Template.photoUpImagePreview.events
 
   'click .crop': (e, tmpl) ->
     e.preventDefault()
-    event.stopPropagation()
+    e.stopPropagation()
     if PhotoUp.get()? and Template.instance().cropCords?.get()?
       cropCords = Template.instance().cropCords.get()
       #photo =  loadImage.scale PhotoUp.get()
