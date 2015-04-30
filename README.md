@@ -47,6 +47,8 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
 
 * jCrop - { ... Jcrop options [see site](http://deepliquid.com/content/Jcrop_Manual.html#Setting_Options) ... }
 
+* autoSelectOnJcrop - This will select a default region for cropping when the photo is loaded.  Is always true on Cordova.
+
 * framework - Choose framework.  Only option currently is 'materialize' the default
 
 * showInfo - bool show image information

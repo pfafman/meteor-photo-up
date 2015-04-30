@@ -1,8 +1,8 @@
 
 <template name="photoUp">
   <div class="photo-up">
-    <input type="file" id="file-uploader" accept="image/*" style="display:none" />
     {{#unless photo}}
+      <input type="file" id="file-uploader" accept="image/*" style="display:none" />
       <div class="dropbox no-image center-align valign-wrapper z-depth-1 {{photoClass}}">
         <div class="photo-in valign">
           <div>{{newDirections}}</div>

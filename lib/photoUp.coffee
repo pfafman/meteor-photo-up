@@ -3,12 +3,18 @@ DEBUG = false
 
 CORDOVA_PROMPT = true
 
-iOS: ->
-  window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
 
 # Global  arrrggg
-@PhotoUp = new ReactiveVar null
+@PhotoUp = new ReactiveVar(null)
 
+PhotoUpCropCords = new ReactiveVar(null)
+
+#####################
+# Functions
+#
+
+iOS: ->
+  window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
 
 
 aspectOk = ->
@@ -96,6 +102,61 @@ dropFile = (e, tmpl, options, onSuccess) ->
 
 
 
+# Preview Functions
+
+doJcrop = (tmpl) ->
+  console.log("doJcrop", tmpl) if DEBUG
+  tmpl.jCrop?.release?()
+  tmpl.jCrop?.destroy?()
+  tmpl.jCrop = null
+  console.log("doJcrop", tmpl, tmpl.data.jCrop) if DEBUG
+
+  img = tmpl.$('#image-preview')[0]
+  if tmpl.data.autoSelectOnJcrop or Meteor.isCordova
+    if tmpl.data.jCrop?.aspectRatio
+      initialHeight = (img.width-60)/tmpl.data.jCrop.aspectRatio - 30
+    else
+      initialHeight = img.height-30
+    setSelect = [30, 30, img.width-30, initialHeight]
+        
+  options = _.defaults tmpl.data.jCrop or {},
+    setSelect: setSelect
+    onSelect: (cords) ->
+      console.log("jcrop on select", cords, tmpl.cropCords) #if DEBUG
+      #tmpl.cropCords.set(null)
+      tmpl.cropCords.set(cords)
+      PhotoUpCropCords.set(cords)
+      console.log("jcrop on select: new cropCords", tmpl.cropCords.get()) #if DEBUG
+    onRelease: ->
+      console.log("jcrop on release") if DEBUG
+      tmpl.cropCords.set(null)
+      PhotoUpCropCords.set(null)
+    #onChange: (cords) ->
+    #  console.log("jcrop on change", cords)
+
+  tmpl.$('#image-preview').Jcrop options, ->
+    console.log("Set crop", @, tmpl, tmpl.cropCords.get()) if DEBUG
+    tmpl.jCrop = @
+  .parent().on "click", (event) ->
+    event.preventDefault()
+
+
+removeJcrop = (tmpl) ->
+  console.log("removeJcrop", tmpl.jCrop) if DEBUG
+  tmpl.jCrop?.destroy()
+  tmpl.$('#image-preview')?.attr('style', '')
+  tmpl.jCrop = null
+
+
+#
+###########################
+
+
+###########################
+#  photoUp Template
+#
+
+
 Template.photoUp.onCreated ->
   if @data?.photo?
     @data.photo.img = new Image(@data.photo.width, @data.photo.height)
@@ -104,7 +165,6 @@ Template.photoUp.onCreated ->
 
 
 Template.photoUp.onRendered ->
-  console.log("turn off drag over") if DEBUG
   $(document).on "dragover", (e) ->
     #console.log("document dragover") if DEBUG
     e.preventDefault()
@@ -217,59 +277,38 @@ Template.photoUp.events
       dropFile(e, tmpl, @)
 
 
-###########################
+#
+######################################################
+
+
+######################################################
 #
 #  photoUpImagePreview
 #
 
 
-doJcrop = (tmpl) ->
-  tmpl.jCrop = null
-  console.log("doJcrop", tmpl, tmpl.data.jCrop) if DEBUG
-
-  img = tmpl.$('#image-preview')[0]
-  if tmpl.data.jCrop?.aspectRatio
-    initialHeight = (img.width-60)/tmpl.data.jCrop.aspectRatio - 30
-  else
-    initialHeight = img.height-30
-  setSelect = [30, 30, img.width-30, initialHeight]
-        
-  options = _.defaults tmpl.data.jCrop or {},
-    setSelect: setSelect
-    onSelect: (cords) ->
-      console.log("jcrop on select", cords, tmpl.cropCords) if DEBUG
-      tmpl.cropCords.set(null)
-      tmpl.cropCords.set(cords)
-    onRelease: ->
-      console.log("jcrop on release") if DEBUG
-      tmpl.cropCords.set(null)
-    #onChange: (cords) ->
-    #  console.log("jcrop on change", cords)
-
-  tmpl.$('#image-preview').Jcrop options, ->
-    console.log("Set crop", @, tmpl) if DEBUG
-    tmpl.jCrop = @
-  .parent().on "click", (event) ->
-    event.preventDefault()
-
-
-removeJcrop = (tmpl) ->
-  console.log("removeJcrop", tmpl.jCrop) if DEBUG
-  tmpl.jCrop?.destroy()
-  tmpl.$('#image-preview')?.attr('style', '')
-  tmpl.jCrop = null
-
 
 Template.photoUpImagePreview.onCreated ->
-  console.log("photoUpImagePreview onCreated") if DEBUG
-  @originalPhoto = new ReactiveVar()
+  console.log("photoUpImagePreview onCreated", @cropCords) if DEBUG
+  @originalPhoto = new ReactiveVar(null)
   @cropCords = new ReactiveVar(null)
+  PhotoUpCropCords.set(null)
 
 
 Template.photoUpImagePreview.onRendered ->
   console.log("photoUpImagePreview onRendered", @)
   if @data?.crop
     doJcrop(@)
+
+
+Template.photoUpImagePreview.onDestroyed ->
+  console.log("photoUpImagePreview onDestroyed") if DEBUG
+  PhotoUp.set(null)
+  #@jCrop.destroy()
+  @originalPhoto.set(null)
+  @cropCords.set(null)
+  PhotoUpCropCords.set(null)
+
 
 
 Template.photoUpImagePreview.helpers
@@ -288,7 +327,7 @@ Template.photoUpImagePreview.helpers
 
 
   noContent: ->
-    if @showInfo or @showClear or Template.instance().cropCords?.get()? or Template.instance().originalPhoto?.get()?
+    if @showInfo or @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()? 
       ""
     else
       "no-content"
@@ -307,8 +346,8 @@ Template.photoUpImagePreview.helpers
     
 
   showAction: ->
-    console.log("showAction", Template.instance().cropCords.get()) if DEBUG
-    Template.instance().cropCords.get()? or @showClear or Template.instance().originalPhoto?.get()?
+    console.log("showAction cropCords:", Template.instance().cropCords, Template.instance().cropCords.get()) if DEBUG
+    @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()? 
 
 
   showReset: ->
@@ -316,8 +355,8 @@ Template.photoUpImagePreview.helpers
 
 
   showCrop: ->
-    console.log("showCrop", @crop, Template.instance().cropCords.get()) if DEBUG
-    @crop and Template.instance().cropCords.get()?
+    console.log("showCrop", @crop, Template.instance().cropCords.get(), PhotoUpCropCords.get()) if DEBUG
+    @crop and PhotoUpCropCords.get()? #Template.instance().cropCords.get()?
 
 
   photo: ->
@@ -344,6 +383,7 @@ Template.photoUpImagePreview.events
     console.log("DROP on photoUpImagePreview") if DEBUG
     tmpl.originalPhoto.set(null)
     tmpl.cropCords?.set(null)
+    PhotoUpCropCords.set(null)
     #removeJcrop(tmpl)
     dropFile e, tmpl, @, =>
       if @crop
@@ -354,14 +394,16 @@ Template.photoUpImagePreview.events
 
 
   'click .clear': (e, tmpl) ->
+    console.log("clear", tmpl.jCrop) if DEBUG
+    tmpl.jCrop?.destroy?()
     PhotoUp.set(null)
 
   
   'click .reset': (e, tmpl) ->
     console.log("reset") if DEBUG
-    PhotoUp.set(Template.instance().originalPhoto.get())
+    PhotoUp.set(tmpl.originalPhoto.get())
     @callback?(null, PhotoUp.get())
-    Template.instance().originalPhoto.set(null)
+    tmpl.originalPhoto.set(null)
     Meteor.setTimeout ->
       doJcrop(tmpl)
     , 500
@@ -370,8 +412,8 @@ Template.photoUpImagePreview.events
   'click .crop': (e, tmpl) ->
     e.preventDefault()
     e.stopPropagation()
-    if PhotoUp.get()? and Template.instance().cropCords?.get()?
-      cropCords = Template.instance().cropCords.get()
+    if PhotoUp.get()? and PhotoUpCropCords.get()? # tmpl.cropCords?.get()?
+      cropCords = PhotoUpCropCords.get() # tmpl.cropCords.get()
       #photo =  loadImage.scale PhotoUp.get()
       photo = PhotoUp.get()
       if photo.newImage
@@ -396,10 +438,16 @@ Template.photoUpImagePreview.events
         size: newImg.toDataURL().length
         newImage: false
         
+      console.log("Remove Crop") if DEBUG
       removeJcrop(tmpl)
-      Template.instance().cropCords.set(null)
+      tmpl.cropCords.set(null)
+      PhotoUpCropCords.set(null)
+
       PhotoUp.set(newPhoto)
       if imageIsValid()
         @callback?(null, newPhoto)
+
+#
+################################
 
 
