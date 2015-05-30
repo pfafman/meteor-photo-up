@@ -13,13 +13,23 @@ PhotoUpCropCords = new ReactiveVar(null)
 # Functions
 #
 
+DataURItoBlob = (dataURI) ->
+  binary = atob(dataURI.split(',')[1])
+  array = []
+  i = 0
+  while i < binary.length
+    array.push binary.charCodeAt(i)
+    i++
+  new Blob([ new Uint8Array(array) ], type: 'image/png')
+
+
 iOS: ->
   window.navigator?.platform? and (/iP(hone|od|ad)/).test(window.navigator.platform)
 
 
 aspectOk = ->
   options = PhotoUp.get().options
-  if options.requiredAspectRatio
+  if options?.requiredAspectRatio
     aspectRatio = PhotoUp.get().width/PhotoUp.get().height
     diff = options.requiredAspectRatio - aspectRatio
     if diff > 0.01
@@ -163,7 +173,6 @@ Template.photoUp.onCreated ->
     @data.photo.img.src = @data.photo.src
   PhotoUp.set(@data?.photo)
 
-
 Template.photoUp.onRendered ->
   $(document).on "dragover", (e) ->
     #console.log("document dragover") if DEBUG
@@ -296,7 +305,7 @@ Template.photoUpImagePreview.onCreated ->
 
 
 Template.photoUpImagePreview.onRendered ->
-  console.log("photoUpImagePreview onRendered", @)
+  console.log("photoUpImagePreview onRendered", @) if DEBUG
   if @data?.crop
     doJcrop(@)
 

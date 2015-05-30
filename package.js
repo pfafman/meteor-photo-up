@@ -1,7 +1,7 @@
 Package.describe({
   name: "pfafman:photo-up",
   summary: "Upload a photo to the client with resize, crop and preview",
-  version: "0.2.6",
+  version: "0.2.7",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
