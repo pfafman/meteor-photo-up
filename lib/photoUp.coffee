@@ -14,7 +14,7 @@ PhotoUpCropCords = new ReactiveVar(null)
 #
 
 # Global Helper
-@DataURItoBlob = (dataURI) ->
+PhotoUp.DataURItoBlob = (dataURI) ->
   binary = atob(dataURI.split(',')[1])
   array = []
   i = 0
@@ -22,6 +22,11 @@ PhotoUpCropCords = new ReactiveVar(null)
     array.push binary.charCodeAt(i)
     i++
   new Blob([ new Uint8Array(array) ], type: 'image/png')
+
+
+PhotoUp.Scale = (img, options) ->
+  console.log("PhotoUp.Scale", options)
+  loadImage.scale(img, options)
 
 
 iOS: ->
