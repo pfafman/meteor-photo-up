@@ -13,7 +13,8 @@ PhotoUpCropCords = new ReactiveVar(null)
 # Functions
 #
 
-DataURItoBlob = (dataURI) ->
+# Global Helper
+@DataURItoBlob = (dataURI) ->
   binary = atob(dataURI.split(',')[1])
   array = []
   i = 0
@@ -199,6 +200,10 @@ Template.photoUp.helpers
 
   newDirections: ->
     @newDirections or T9n.get("Drop image here")
+
+
+  newImage: ->
+    @newImage or '<i class="mdi-image-photo"></i>'
 
 
 Template.photoUp.events

@@ -1,13 +1,13 @@
 
 <template name="photoUp">
-  <div class="photo-up">
+  <div class="photo-up {{extraClass}}">
     {{#unless photo}}
-      <input type="file" id="file-uploader" accept="image/*" style="display:none" />
+      <input type="file" id="file-uploader" name="photo-up-image-file" accept="image/*" style="display:none" />
       <div class="dropbox no-image center-align valign-wrapper z-depth-1 {{photoClass}}">
         <div class="photo-in valign">
           <div>{{newDirections}}</div>
           <div>
-            <i class="mdi-image-photo"></i>
+            {{{newImage}}}
           </div>  
         </div>
       </div>
