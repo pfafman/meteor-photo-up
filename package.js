@@ -55,6 +55,7 @@ Package.on_use(function(api, where) {
     'lib/t9n/de.coffee',
     'lib/t9n/cs.coffee',
     'lib/t9n/sk.coffee',
+    'lib/t9n/pt_BR.coffee'
   ], ["client", "server"]);
 
 });
