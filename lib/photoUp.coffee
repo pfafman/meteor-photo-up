@@ -177,6 +177,7 @@ Template.photoUp.onCreated ->
   if @data?.photo?
     @data.photo.img = new Image(@data.photo.width, @data.photo.height)
     @data.photo.img.src = @data.photo.src
+  console.log("photoUp onCreated", @data?.photo) if DEBUG
   PhotoUp.set(@data?.photo)
 
 Template.photoUp.onRendered ->
