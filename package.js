@@ -49,7 +49,7 @@ Package.on_use(function(api, where) {
 
 
   api.use([
-    'softwarerero:accounts-t9n',
+    'softwarerero:accounts-t9n@1.1.4',
     'coffeescript',
   ], ["client", "server"]);
 
