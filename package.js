@@ -1,18 +1,18 @@
 Package.describe({
   name: "pfafman:photo-up",
   summary: "Upload a photo to the client with resize, crop and preview",
-  version: "0.3.3",
+  version: "0.4.0",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
 Package.on_use(function(api, where) {
-  api.versionsFrom("METEOR@1.1");
+  api.versionsFrom("METEOR@1.2");
 
   api.use([
     //'less',
     'underscore',
     'templating',
-    'ui',
+    'blaze',
     'jquery',
     'coffeescript',
     'reactive-var',
@@ -20,14 +20,17 @@ Package.on_use(function(api, where) {
 
 
   // Jcrop
-  api.add_files([
+  api.addFiles([
     'lib/Jcrop/jquery.Jcrop.js',
-    'lib/Jcrop/jquery.Jcrop.css',
+    'lib/Jcrop/jquery.Jcrop.css'
+  ], 'client');
+
+  api.addAssets([
     'lib/Jcrop/Jcrop.gif'
   ], 'client');
 
    // JavaScript-Load-Image
-  api.add_files([
+  api.addFiles([
     'lib/load-image/load-image.js',
     'lib/load-image/load-image-ios.js',
     'lib/load-image/load-image-meta.js',
@@ -37,7 +40,7 @@ Package.on_use(function(api, where) {
     ], 'client');
 
 
-  api.add_files([
+  api.addFiles([
     //'lib/photoUp.less',
     'lib/photoUp.css',
     'lib/photoUp.html',
@@ -46,10 +49,11 @@ Package.on_use(function(api, where) {
 
 
   api.use([
-    'softwarerero:accounts-t9n@1.1.3',
+    'softwarerero:accounts-t9n',
+    'coffeescript',
   ], ["client", "server"]);
 
-  api.add_files([
+  api.addFiles([
     'lib/t9n/en.coffee',
     'lib/t9n/it.coffee',
     'lib/t9n/de.coffee',
