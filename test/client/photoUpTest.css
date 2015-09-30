@@ -1,0 +1,14 @@
+/* CSS declarations go here */
+
+body {
+  background-color: #777;
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin: auto;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
