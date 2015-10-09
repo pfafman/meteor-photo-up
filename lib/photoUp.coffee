@@ -209,7 +209,7 @@ Template.photoUp.helpers
 
 
   newImage: ->
-    @newImage or '<i class="mdi-image-photo"></i>'
+    @newImage or '<i class="material-icons">insert_photo</i>'
 
 
 Template.photoUp.events
