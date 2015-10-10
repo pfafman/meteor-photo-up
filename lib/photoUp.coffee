@@ -253,21 +253,23 @@ Template.photoUp.events
           message: ''
           closeLabel: T9n.get 'No'
           submitLabel: T9n.get 'Yes'
-          callback: (useCamera) =>
-            
-            options =
-              width: @desiredWidth or 600
-              height: @desiredHeight or 400
-              quality: 100
-            
-            if not useCamera
-              options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
-            
-            MeteorCamera.getPicture options, (error, src) =>
-              if error
-                Materialize.toast("#{error.reason}", 4000)
-              else if src
-                processImage(src, tmpl, @)
+          callback: (error, rtn) =>
+            if error
+              Materialize.toast("#{error.reason}", 4000)
+            else
+              options =
+                width: @desiredWidth or 600
+                height: @desiredHeight or 400
+                quality: 100
+              
+              if not rtn.submit
+                options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
+              
+              MeteorCamera.getPicture options, (error, src) =>
+                if error
+                  Materialize.toast("#{error.reason}", 4000)
+                else if src
+                  processImage(src, tmpl, @)
       else
         # Confirm is an ugly UI!
         useCamera = confirm(T9n.get "Use camera?")
