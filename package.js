@@ -55,6 +55,7 @@ Package.on_use(function(api, where) {
 
   api.addFiles([
     'lib/t9n/en.coffee',
+    'lib/t9n/es.coffee',
     'lib/t9n/it.coffee',
     'lib/t9n/de.coffee',
     'lib/t9n/cs.coffee',
