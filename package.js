@@ -1,7 +1,7 @@
 Package.describe({
   name: "pfafman:photo-up",
   summary: "Upload a photo to the client with resize, crop and preview",
-  version: "0.4.1",
+  version: "0.4.2",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
@@ -49,7 +49,7 @@ Package.on_use(function(api, where) {
 
 
   api.use([
-    'softwarerero:accounts-t9n',
+    'softwarerero:accounts-t9n@1.1.4',
     'coffeescript',
   ], ["client", "server"]);
 
