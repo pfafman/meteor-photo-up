@@ -66,12 +66,13 @@ Can pass in the options for [load-image](https://github.com/blueimp/JavaScript-L
 ```
 	photo:
 	  name: file.name         # (without the type suffix)
-    filesize: file.size
-    img: img                # the img returned from load-image
-    src: img.toDataURL()
-    size: img.toDataURL().length
-    newImage: true
-    orientation: (from exif or 1)
+      filesize: file.size
+      img: img                # the img returned from load-image
+      src: img.toDataURL()
+      size: img.toDataURL().length
+      newImage: true
+      orientation: (from exif or 1)
+      svg: svg blob if the file is an svg file. 
 ```
 
 
