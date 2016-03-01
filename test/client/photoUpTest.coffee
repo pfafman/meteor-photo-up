@@ -1,6 +1,6 @@
 
 
-DEBUG = true
+DEBUG = false
 
 Template.photoUpTest.onCreated ->
   # ...

@@ -50,7 +50,7 @@ imageIsValid = ->
 processImage = (fileOrSrc, tmpl, options, onSuccess) ->
   console.log("processImage", fileOrSrc?.length)
   loadImage.options = _.defaults options.loadImage or {},
-    canvas: true
+    canvas: false
     orientation: fileOrSrc?.exif?.get?('Orientation') or 1
 
   loadImage fileOrSrc, (img) ->
@@ -82,8 +82,8 @@ dropFile = (e, tmpl, options, onSuccess) ->
   console.log("dropped", evt, files) if DEBUG
   if files?
     for file in files
-      console.log("Droppecd file", file.name, file.size, file.type) if DEBUG
       if file.type.indexOf("image") is 0
+
         loadImage.parseMetaData file, (data) ->
 
           loadImage.options = _.defaults options.loadImage or {},
@@ -91,6 +91,7 @@ dropFile = (e, tmpl, options, onSuccess) ->
             orientation: data?.exif?.get?('Orientation') or 1
 
           loadImage file, (img) ->
+            console.log("dropFile loadImage callback img", img, "file", file) if DEBUG
             photo =
               name: file.name.split('.')[0]
               filesize: file.size
@@ -102,6 +103,30 @@ dropFile = (e, tmpl, options, onSuccess) ->
               newImage: true
               orientation: data?.exif?.get?('Orientation') or 1
               options: options
+
+            if file.type.match('svg') and FileReader?
+              console.log("File is SVG image get content ...")
+
+              photo.svg = new Blob([file], type: file.type)
+              photo.svg.name = file.name.split('.')[0]
+
+              # reader = new FileReader()
+
+              # reader.onload = ((theFile) ->
+              #   (evt) ->
+              #     console.log("fileReader file", theFile, evt)
+
+              #     photo.svg =
+              #       size: theFile.size
+              #       content: evt?.target?.result
+              #     PhotoUp.set(photo)
+              #     if imageIsValid()
+              #       options.callback?(null, photo)
+              #     onSuccess?()
+              # ) (file)
+
+              # reader.readAsText(file)
+
             
             PhotoUp.set(photo)
 
@@ -110,6 +135,9 @@ dropFile = (e, tmpl, options, onSuccess) ->
             onSuccess?()
 
           , loadImage.options
+
+        
+
 
       else
         Materialize.toast(T9n.get("Cannot read") + " #{file.type} " + T9n.get('file') + " #{file.name}", 3000, 'red')

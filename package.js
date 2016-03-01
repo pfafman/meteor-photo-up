@@ -1,7 +1,7 @@
 Package.describe({
   name: "pfafman:photo-up",
   summary: "Upload a photo to the client with resize, crop and preview",
-  version: "0.4.3",
+  version: "0.5.0",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
@@ -32,7 +32,7 @@ Package.on_use(function(api, where) {
    // JavaScript-Load-Image
   api.addFiles([
     'lib/load-image/load-image.js',
-    'lib/load-image/load-image-ios.js',
+    //'lib/load-image/load-image-ios.js',
     'lib/load-image/load-image-meta.js',
     'lib/load-image/load-image-exif.js',
     'lib/load-image/load-image-exif-map.js',
@@ -49,7 +49,7 @@ Package.on_use(function(api, where) {
 
 
   api.use([
-    'softwarerero:accounts-t9n@1.2.0',
+    'softwarerero:accounts-t9n@1.2.2',
     'coffeescript',
   ], ["client", "server"]);
 
