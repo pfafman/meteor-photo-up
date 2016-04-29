@@ -155,7 +155,7 @@ doJcrop = (tmpl) ->
   tmpl.jCrop = null
   console.log("doJcrop", tmpl, tmpl.data.jCrop) if DEBUG
 
-  img = tmpl.$('#image-preview')[0]
+  img = tmpl?.$('#image-preview')?[0]
   if tmpl.data.autoSelectOnJcrop or Meteor.isCordova
     if tmpl.data.jCrop?.aspectRatio
       initialHeight = (img.width-60)/tmpl.data.jCrop.aspectRatio - 30
@@ -166,11 +166,11 @@ doJcrop = (tmpl) ->
   options = _.defaults tmpl.data.jCrop or {},
     setSelect: setSelect
     onSelect: (cords) ->
-      console.log("jcrop on select", cords, tmpl.cropCords) #if DEBUG
+      console.log("jcrop on select", cords, tmpl.cropCords) if DEBUG
       #tmpl.cropCords.set(null)
       tmpl.cropCords.set(cords)
       PhotoUpCropCords.set(cords)
-      console.log("jcrop on select: new cropCords", tmpl.cropCords.get()) #if DEBUG
+      console.log("jcrop on select: new cropCords", tmpl.cropCords.get()) if DEBUG
     onRelease: ->
       console.log("jcrop on release") if DEBUG
       tmpl.cropCords.set(null)
@@ -187,10 +187,12 @@ doJcrop = (tmpl) ->
 
 removeJcrop = (tmpl) ->
   console.log("removeJcrop", tmpl.jCrop) if DEBUG
-  tmpl.jCrop?.destroy()
-  tmpl.$('#image-preview')?.attr('style', '')
-  tmpl.jCrop = null
-
+  try
+    tmpl.jCrop?.destroy()
+    tmpl.$('#image-preview')?.attr('style', '')
+    tmpl.jCrop = null
+  catch error
+    console.log("removeJcrop error", error)
 
 #
 ###########################
@@ -429,18 +431,30 @@ Template.photoUpImagePreview.helpers
 
 Template.photoUpImagePreview.events
 
+  'dragover .dropbox': (e, tmpl) ->
+    console.log("Drag over") if DEBUG
+    # if PhotoUp.get()
+    #   tmpl.jCrop?.destroy?()
+    #   PhotoUp.set(null)
+
+
   'drop .dropbox': (e, tmpl) ->
     console.log("DROP on photoUpImagePreview") if DEBUG
+    
+    # Clear it
+    #PhotoUp.set(null)
+    #removeJcrop(tmpl)
+    
     tmpl.originalPhoto.set(null)
     tmpl.cropCords?.set(null)
     PhotoUpCropCords.set(null)
-    #removeJcrop(tmpl)
+
     dropFile e, tmpl, @, =>
       if @crop
         removeJcrop(tmpl)
         Meteor.setTimeout ->
           doJcrop(tmpl)
-        , 500
+        , 200
 
 
   'click .clear': (e, tmpl) ->
