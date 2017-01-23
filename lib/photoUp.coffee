@@ -25,7 +25,7 @@ PhotoUp.DataURItoBlob = (dataURI) ->
 
 
 PhotoUp.Scale = (img, options) ->
-  console.log("PhotoUp.Scale", options)
+  console.log("PhotoUp.Scale", options) if DEBUG
   loadImage.scale(img, options)
 
 
