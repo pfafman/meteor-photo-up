@@ -3,6 +3,9 @@ DEBUG = false
 
 CORDOVA_PROMPT = true
 
+#@T9n = (require 'meteor-accounts-t9n').T9n
+
+
 
 # Global  arrrggg
 @PhotoUp = new ReactiveVar(null)

@@ -48,7 +48,7 @@ Package.on_use(function(api, where) {
 
 
   api.use([
-    'softwarerero:accounts-t9n',
+    'softwarerero:accounts-t9n@2.1.0',
     'coffeescript',
   ], ["client", "server"]);
 
