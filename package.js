@@ -1,11 +1,11 @@
 Package.describe({
   name: "pfafman:photo-up",
   summary: "Upload a photo to the client with resize, crop and preview",
-  version: "0.5.2_1",
+  version: "0.5.2_2",
   git: "https://github.com/pfafman/meteor-photo-up.git"
 });
 
-Package.on_use(function(api, where) {
+Package.onUse(function(api, where) {
   
   api.use([
     //'less',
@@ -65,7 +65,7 @@ Package.on_use(function(api, where) {
 });
 
 
-Package.on_test(function(api) {
+Package.onTest(function(api) {
   api.use("pfafman:photo-up", 'client');
   api.use(['tinytest', 'test-helpers', 'coffeescript'], 'client');
   //api.add_files('photo-up-tests.coffee', 'client');
