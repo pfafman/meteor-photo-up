@@ -69,12 +69,12 @@ processImage = (fileOrSrc, tmpl, options, onSuccess) ->
       newImage: true
       orientation: data?.exif?.get?('Orientation') or 1
       options: options
-    
+
     PhotoUp.set(photo)
 
     if imageIsValid()
       options.callback?(null, photo)
-    
+
     onSuccess?()
 
 
@@ -130,7 +130,7 @@ dropFile = (e, tmpl, options, onSuccess) ->
 
               # reader.readAsText(file)
 
-            
+
             PhotoUp.set(photo)
 
             if imageIsValid()
@@ -139,7 +139,7 @@ dropFile = (e, tmpl, options, onSuccess) ->
 
           , loadImage.options
 
-        
+
 
 
       else
@@ -165,7 +165,7 @@ doJcrop = (tmpl) ->
     else
       initialHeight = img.height-30
     setSelect = [30, 30, img.width-30, initialHeight]
-        
+
   options = _.defaults tmpl.data.jCrop or {},
     setSelect: setSelect
     onSelect: (cords) ->
@@ -232,7 +232,7 @@ Template.photoUp.onDestroyed ->
 
 
 Template.photoUp.helpers
-  
+
   photo: ->
     PhotoUp.get()
 
@@ -246,7 +246,7 @@ Template.photoUp.helpers
 
 
 Template.photoUp.events
-  
+
   'dragover .dropbox': (e, tmpl) ->
     evt = e.originalEvent or e
     evt.dataTransfer.dropEffect = 'copy'
@@ -294,10 +294,10 @@ Template.photoUp.events
                 width: @desiredWidth or 600
                 height: @desiredHeight or 400
                 quality: 100
-              
+
               if not rtn.submit
                 options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
-              
+
               MeteorCamera.getPicture options, (error, src) =>
                 if error
                   Materialize.toast("#{error.reason}", 4000)
@@ -310,10 +310,10 @@ Template.photoUp.events
           width: @desiredWidth or 600
           height: @desiredHeight or 400
           quality: 100
-        
+
         if not useCamera
           options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY
-        
+
         MeteorCamera.getPicture options, (error, src) =>
           if error
             Materialize.toast("#{error.reason}", 4000)
@@ -367,13 +367,12 @@ Template.photoUpImagePreview.onDestroyed ->
 
 
 Template.photoUpImagePreview.helpers
-  
+
   replaceDirections: ->
     replaceDirections = "Drop new image to replace"
     if @crop
       replaceDirections += " or crop this image"
-    T9n.get replaceDirections
-    @replaceDirections or replaceDirections
+    @replaceDirections or T9n.get(replaceDirections)
 
 
   fixMaxWidth: ->
@@ -382,7 +381,7 @@ Template.photoUpImagePreview.helpers
 
 
   noContent: ->
-    if @showInfo or @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()? 
+    if @showInfo or @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()?
       ""
     else
       "no-content"
@@ -398,11 +397,11 @@ Template.photoUpImagePreview.helpers
   badAspectRatio: ->
     if not aspectOk(@)
       "bad-aspect-ratio"
-    
+
 
   showAction: ->
     console.log("showAction cropCords:", Template.instance().cropCords, Template.instance().cropCords.get()) if DEBUG
-    @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()? 
+    @showClear or Template.instance().originalPhoto?.get()? or PhotoUpCropCords.get()? # Template.instance().cropCords?.get()?
 
 
   showReset: ->
@@ -465,7 +464,7 @@ Template.photoUpImagePreview.events
     tmpl.jCrop?.destroy?()
     PhotoUp.set(null)
 
-  
+
   'click .reset': (e, tmpl) ->
     console.log("reset") if DEBUG
     PhotoUp.set(tmpl.originalPhoto.get())
@@ -486,7 +485,7 @@ Template.photoUpImagePreview.events
       if photo.newImage
         console.log("save original") if DEBUG
         tmpl.originalPhoto.set(photo)
-      
+
       console.log("Crop Image", cropCords, PhotoUp.get()) if DEBUG
       newImg = loadImage.scale photo.img,
         left: cropCords.x
@@ -504,7 +503,7 @@ Template.photoUpImagePreview.events
         src: newImg.toDataURL()
         size: newImg.toDataURL().length
         newImage: false
-        
+
       console.log("Remove Crop") if DEBUG
       removeJcrop(tmpl)
       tmpl.cropCords.set(null)
@@ -516,5 +515,3 @@ Template.photoUpImagePreview.events
 
 #
 ################################
-
-
